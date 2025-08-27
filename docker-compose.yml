@@ -1,0 +1,13 @@
+services:
+  # Container running the FastAPI image
+  api:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    container_name: weather_api
+    ports:
+      - "8000:${APP_PORT}"
+    volumes:
+      - "./src:/code"
+    env_file:
+      - "./.env"
