@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 if __name__ == "__main__":
     load_dotenv()
 
-    host = os.getenv("APP_HOST", "0.0.0.0")
-    port = os.getenv("APP_PORT", 8000)
-    log_level = os.getenv("LOG_LEVEL", "info")
-    auto_reload = os.getenv("AUTO_RELOAD", "False")
+    host = os.getenv("APP_HOST", "0.0.0.0") # Default to '0.0.0.0'
+    port = os.getenv("APP_PORT", 8000) # Default to 8000
+    log_level = os.getenv("LOG_LEVEL", "info") # Default to 'info' level
+    auto_reload = os.getenv("AUTO_RELOAD", "False") # Default to False
 
     uvicorn.run(
         app="main:app",
