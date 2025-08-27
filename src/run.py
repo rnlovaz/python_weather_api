@@ -13,7 +13,8 @@ if __name__ == "__main__":
 
     uvicorn.run(
         app="main:app",
+        host=host,
         port=int(port),
         log_level=log_level,
-        reload=auto_reload.lower() == 'true',
+        reload=auto_reload.lower() == "true",
     )
