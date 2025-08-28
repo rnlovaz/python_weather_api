@@ -6,6 +6,7 @@ repos:
     hooks:
       # Run linter
       - id: ruff-check
+        args: [ --fix ]
       # Run formatter
       - id: ruff-format
 
