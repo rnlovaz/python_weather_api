@@ -33,7 +33,7 @@ down:
 
 # Spin up docker containers (also removes leftovers and forces recreation)
 up:
-	docker compose up --build --force-recreate --remove-orphans
+	docker compose up -d --build --force-recreate --remove-orphans
 
 # Run mypy on src files
 type-check:
