@@ -32,7 +32,7 @@ class GetLocationSchema(BaseModel):
 
 
 class CreateLocationSchema(BaseModel):
-    slug: Annotated[str, AfterValidator(is_url_safe)] = Field(le=200)
+    slug: Annotated[str, AfterValidator(is_url_safe)] = Field(lt=200)
     latitude: float
     longitude: float
 
