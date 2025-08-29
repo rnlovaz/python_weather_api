@@ -38,3 +38,16 @@ up:
 # Run mypy on src files
 type-check:
 	mypy src
+
+# Create a new Alembic migration with a custom message
+# Usage: make make-migration MSG="your message here"
+make-migration:
+	@if [ -z "$(MSG)" ]; then \
+		echo "Please provide a message: make make-migration MSG=\"your message\""; \
+		exit 1; \
+	fi
+	alembic revision --autogenerate -m "$(MSG)"
+
+# Apply all migrations (upgrade to head)
+migrate:
+	alembic upgrade head

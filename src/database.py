@@ -13,8 +13,10 @@ db_port = os.getenv("POSTGRES_PORT", "5432")
 db_host = os.getenv("POSTGRES_HOST", "0.0.0.0")
 
 DATABASE_URL = (
-    f"postgresql+psycopg://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}"
+    f"postgresql+psycopg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 )
+
+print("DB URL", DATABASE_URL)
 
 # echo=True logs SQL queries to the console
 engine = create_engine(DATABASE_URL, echo=True)
