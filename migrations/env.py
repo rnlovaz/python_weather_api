@@ -7,7 +7,7 @@ from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
 # ruff: noqa: F401 (tells ruff to not remove unused imports, because we need them here)
-from api.location.entities import Location
+from src.api.location.entities import Location
 from src.database import DATABASE_URL
 
 # this is the Alembic Config object, which provides
