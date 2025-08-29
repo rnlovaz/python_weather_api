@@ -1,20 +1,19 @@
 """Add new locations table
 
-Revision ID: e0c0c85f0b64
+Revision ID: 3e4f59b57d4f
 Revises:
-Create Date: 2025-08-29 12:47:39.164741
+Create Date: 2025-08-29 18:24:13.120306
 
 """
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 import sqlmodel  # Added to ensure SQLModel compatibility
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "e0c0c85f0b64"
+revision: str = "3e4f59b57d4f"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

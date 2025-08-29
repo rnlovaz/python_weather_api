@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 
 
 class Location(SQLModel, table=True):  # type: ignore
-    id: int = Field(primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     slug: str = Field(lt=200, unique=True)
     name: Optional[str] = Field(default=None, lt=200)
     latitude: float
