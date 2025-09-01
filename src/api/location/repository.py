@@ -2,31 +2,31 @@ from typing import Any
 
 from sqlmodel import Session, select
 
-from .entities import Location
+from .entities import LocationEntity
 
 
 class LocationRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def get_all(self) -> list[Location]:
-        return list(self.session.exec(select(Location)).all())
+    def get_all(self) -> list[LocationEntity]:
+        return list(self.session.exec(select(LocationEntity)).all())
 
-    def get_one(self, slug: str) -> Location | None:
+    def get_one(self, slug: str) -> LocationEntity | None:
         return self.session.exec(
-            select(Location).where(Location.slug == slug)
+            select(LocationEntity).where(LocationEntity.slug == slug)
         ).one_or_none()
 
-    def create(self, slug: str, lat: float, lon: float) -> Location:
-        new_location = Location(slug=slug, latitude=lat, longitude=lon)
+    def create(self, slug: str, lat: float, lon: float) -> LocationEntity:
+        new_location = LocationEntity(slug=slug, latitude=lat, longitude=lon)
         self.session.add(new_location)
         self.session.commit()
         self.session.refresh(new_location)
         return new_location
 
-    def update(self, slug: str, update_data: dict[str, Any]) -> Location | None:
+    def update(self, slug: str, update_data: dict[str, Any]) -> LocationEntity | None:
         target_location = self.session.exec(
-            select(Location).where(Location.slug == slug)
+            select(LocationEntity).where(LocationEntity.slug == slug)
         ).one_or_none()
 
         if not target_location:
@@ -41,9 +41,9 @@ class LocationRepository:
         self.session.refresh(target_location)
         return target_location
 
-    def delete(self, slug: str) -> Location | None:
+    def delete(self, slug: str) -> LocationEntity | None:
         target_location = self.session.exec(
-            select(Location).where(Location.slug == slug)
+            select(LocationEntity).where(LocationEntity.slug == slug)
         ).one_or_none()
 
         if not target_location:
