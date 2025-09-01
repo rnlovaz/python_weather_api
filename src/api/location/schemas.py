@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 import re
 from datetime import datetime
 from typing import Annotated, Optional
 
 from pydantic import AfterValidator, BaseModel, Field
+
+from .models import LocationModel
 
 
 def is_url_safe(slug: str) -> str:
@@ -18,7 +22,7 @@ def is_url_safe(slug: str) -> str:
 
 
 class LocationSchema(BaseModel):
-    id: int
+    location_id: Optional[int]
     slug: str
     name: Optional[str]
     latitude: float
@@ -26,9 +30,17 @@ class LocationSchema(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-
-class GetLocationSchema(BaseModel):
-    slug: str
+    @classmethod
+    def from_model(cls, model: LocationModel) -> LocationSchema:
+        return LocationSchema(
+            location_id=model.location_id,
+            slug=model.slug,
+            name=model.name,
+            latitude=model.latitude,
+            longitude=model.longitude,
+            created_at=model.created_at,
+            updated_at=model.updated_at,
+        )
 
 
 class CreateLocationSchema(BaseModel):
@@ -38,10 +50,5 @@ class CreateLocationSchema(BaseModel):
 
 
 class UpdateLocationSchema(BaseModel):
-    slug: str
     latitude: Optional[float]
     longitude: Optional[float]
-
-
-class DeleteLocationSchema(BaseModel):
-    slug: str
