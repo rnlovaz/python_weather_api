@@ -1,8 +1,8 @@
 """Add new locations table
 
-Revision ID: ab69b2b91a7d
+Revision ID: 0687a8dd6f8e
 Revises:
-Create Date: 2025-09-01 14:26:28.417692
+Create Date: 2025-09-01 18:05:11.974469
 
 """
 
@@ -13,7 +13,7 @@ import sqlmodel  # Added to ensure SQLModel compatibility
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "ab69b2b91a7d"
+revision: str = "0687a8dd6f8e"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,8 +25,8 @@ def upgrade() -> None:
     op.create_table(
         "locations",
         sa.Column("location_id", sa.Integer(), nullable=False),
-        sa.Column("slug", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+        sa.Column("slug", sqlmodel.sql.sqltypes.AutoString(length=200), nullable=False),
+        sa.Column("name", sqlmodel.sql.sqltypes.AutoString(length=200), nullable=True),
         sa.Column("latitude", sa.Float(), nullable=False),
         sa.Column("longitude", sa.Float(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),

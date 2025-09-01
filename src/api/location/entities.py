@@ -8,8 +8,8 @@ class LocationEntity(SQLModel, table=True):  # type: ignore
     __tablename__ = "locations"
 
     location_id: Optional[int] = Field(default=None, primary_key=True)
-    slug: str = Field(lt=200, unique=True)
-    name: Optional[str] = Field(default=None, lt=200)
+    slug: str = Field(max_length=200, unique=True)
+    name: Optional[str] = Field(default=None, max_length=200)
     latitude: float
     longitude: float
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
