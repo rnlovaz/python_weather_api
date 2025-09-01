@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlmodel import Session, select
 
 from .entities import Location
@@ -22,8 +24,31 @@ class LocationRepository:
         self.session.refresh(new_location)
         return new_location
 
-    # def update(self, slug: str, lat: Optional[float], lon: Optional[float]) -> Location:
-    #     pass
+    def update(self, slug: str, update_data: dict[str, Any]) -> Location | None:
+        target_location = self.session.exec(
+            select(Location).where(Location.slug == slug)
+        ).one_or_none()
 
-    def delete(self, slug: str) -> None:
-        pass
+        if not target_location:
+            return None
+
+        # Loop update dict keys/values and update them in stored entity
+        for key, value in update_data.items():
+            setattr(target_location, key, value)
+
+        self.session.add(target_location)
+        self.session.commit()
+        self.session.refresh(target_location)
+        return target_location
+
+    def delete(self, slug: str) -> Location | None:
+        target_location = self.session.exec(
+            select(Location).where(Location.slug == slug)
+        ).one_or_none()
+
+        if not target_location:
+            return None
+
+        self.session.delete(target_location)
+        self.session.commit()
+        return target_location
