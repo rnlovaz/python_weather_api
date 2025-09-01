@@ -1,6 +1,8 @@
+import os
 from logging.config import fileConfig
 
 from alembic import context
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 # List of SQLModel entities to keep track
@@ -10,9 +12,17 @@ from sqlmodel import SQLModel
 from src.api.location.entities import LocationEntity
 from src.database import DATABASE_URL
 
+load_dotenv()
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# Hostname may differ from the one that is used by docker containers. If running migrations locally
+# we need "0.0.0.0" as our hostname for the DB.
+db_host = os.getenv("POSTGRES_HOST", "0.0.0.0")
+if db_host != "0.0.0.0":
+    DATABASE_URL = DATABASE_URL.replace(f"@{db_host}:", "@0.0.0.0:")
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
