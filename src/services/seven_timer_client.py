@@ -28,7 +28,7 @@ class SevenTimerResponseDTO(BaseModel):
 class SevenTimerClient:
     BASE_URL = "https://www.7timer.info/bin/astro.php"
 
-    def get_forecast(self, lat: float, lon: float) -> SevenTimerResponseDTO | None:
+    def get_forecast(self, lat: float, lon: float) -> SevenTimerResponseDTO:
         """
         Retrieves forecast data using the 'Astro' product of 7timer.
         """
