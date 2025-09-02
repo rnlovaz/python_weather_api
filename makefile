@@ -46,7 +46,8 @@ make-migration:
 		echo "Please provide a message: make make-migration MSG=\"your message\""; \
 		exit 1; \
 	fi
-	alembic revision --autogenerate -m "$(MSG)"
+	timestamp=$$(date +%Y_%m_%d_%H_%M); \
+	alembic revision --autogenerate -m "$${timestamp}_$(MSG)"
 
 # Apply all migrations (upgrade to head)
 migrate:
