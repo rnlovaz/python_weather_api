@@ -1,7 +1,12 @@
 from datetime import datetime, timezone
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, SQLModel, UniqueConstraint
+from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
+
+# Import types for relationship attributes
+# (TYPE_CHECKING is to prevent circular imports)
+if TYPE_CHECKING:
+    from src.api.location.entities import LocationEntity
 
 
 class ForecastEntity(SQLModel, table=True):  # type: ignore
@@ -23,3 +28,7 @@ class ForecastEntity(SQLModel, table=True):  # type: ignore
         default_factory=lambda: datetime.now(timezone.utc),
         sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)},
     )
+
+    # We could use "back_populates" with the relationship field on LocationEntity to have a list of forecasts
+    # For now, we don't want any relationship back populate
+    location: "LocationEntity" = Relationship(back_populates=None)
