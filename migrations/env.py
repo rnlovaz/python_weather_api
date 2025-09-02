@@ -9,6 +9,7 @@ from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
 # ruff: noqa: F401 (tells ruff to not remove unused imports, because we need them here)
+from src.api.forecast.entities import ForecastEntity
 from src.api.location.entities import LocationEntity
 from src.database import DATABASE_URL
 
