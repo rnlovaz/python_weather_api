@@ -13,4 +13,4 @@ repos:
     rev: v1.11.2 # check for latest version
     hooks:
       - id: mypy
-        additional_dependencies: [fastapi, pydantic]
+        additional_dependencies: [fastapi, pydantic, types-requests]
