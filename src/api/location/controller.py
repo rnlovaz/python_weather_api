@@ -3,14 +3,17 @@ from sqlmodel import Session
 
 from database import get_session
 
-from .exceptions import LocationNotFoundError
+from .exceptions import LocationNotFoundError, LocationAlreadyExistsError
 from .models import LocationModel
 from .repository import LocationRepository
 from .schemas import CreateLocationSchema, UpdateLocationSchema
 
 
 class LocationController:
-    def __init__(self, session: Session = Depends(get_session)):
+    def __init__(
+        self,
+        session: Session = Depends(get_session),
+    ):
         # Instantiate the location repo with dependency injection of db session
         self.location_repo = LocationRepository(session)
 
@@ -44,6 +47,8 @@ class LocationController:
         return LocationModel.from_entity(updated_entity)
 
     def create_location(self, create_schema: CreateLocationSchema) -> LocationModel:
+        if self.location_repo.get_one(create_schema.slug):
+            raise LocationAlreadyExistsError()
         new_location = self.location_repo.create(
             slug=create_schema.slug,
             lat=create_schema.latitude,

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from .controller import LocationController
-from .exceptions import LocationNotFoundError
+from .exceptions import LocationAlreadyExistsError, LocationNotFoundError
 from .schemas import CreateLocationSchema, LocationSchema, UpdateLocationSchema
 
 # Initialize a new router
@@ -47,8 +47,14 @@ def create_location(
     payload: CreateLocationSchema,
     controller: LocationController = Depends(),
 ) -> LocationSchema:
-    model = controller.create_location(create_schema=payload)
-    return LocationSchema.from_model(model)
+    try:
+        model = controller.create_location(create_schema=payload)
+        return LocationSchema.from_model(model)
+    except LocationAlreadyExistsError:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Location with slug '{payload.slug}' already exists",
+        )
 
 
 @router.patch(
