@@ -1,10 +1,14 @@
 import time
 from datetime import date, datetime
 
+from fastapi import Depends
+from sqlmodel import Session
+
 from api.forecast.repository import ForecastRepository
 from api.forecast.schemas import UpdateForecastSchema
 from api.location.entities import LocationEntity
 from api.location.repository import LocationRepository
+from database import get_session
 
 from .seven_timer_client import SevenTimerClient, SevenTimerResponseDTO
 
@@ -12,12 +16,11 @@ from .seven_timer_client import SevenTimerClient, SevenTimerResponseDTO
 class ForecastRefreshService:
     def __init__(
         self,
-        location_repo: LocationRepository,
-        forecast_repo: ForecastRepository,
-        seven_timer_client: SevenTimerClient,
+        session: Session = Depends(get_session),
+        seven_timer_client: SevenTimerClient = Depends(),
     ):
-        self.location_repo = location_repo
-        self.forecast_repo = forecast_repo
+        self.location_repo = LocationRepository(session)
+        self.forecast_repo = ForecastRepository(session)
         self.seven_timer_client = seven_timer_client
 
     def _get_min_max_temp(
@@ -34,7 +37,6 @@ class ForecastRefreshService:
         # Find out max and min temp from response
         # Check if we already have a stored forecast for the current location
         # If forecast already exists, update it (max and min temp values), otherwise create it
-
         forecast_data = self.seven_timer_client.get_forecast(
             lat=location.latitude, lon=location.longitude
         )
