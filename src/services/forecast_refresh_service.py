@@ -32,7 +32,7 @@ class ForecastRefreshService:
         daily_temps = [data.temp2m for data in forecast_data.dataseries]
         return min(daily_temps), max(daily_temps)
 
-    def _refresh_daily_forecast(self, location: LocationEntity) -> None:
+    def refresh_daily_forecast(self, location: LocationEntity) -> None:
         # fetch daily forecast data from 7timer client
         # Find out max and min temp from response
         # Check if we already have a stored forecast for the current location
@@ -79,5 +79,5 @@ class ForecastRefreshService:
         stored_locations = self.location_repo.get_all()
 
         for location in stored_locations:
-            self._refresh_daily_forecast(location)
-            time.sleep(3)  # to prevent sven timer API overload
+            self.refresh_daily_forecast(location)
+            time.sleep(2)  # to prevent sven timer API overload

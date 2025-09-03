@@ -2,8 +2,9 @@ from fastapi import Depends
 from sqlmodel import Session
 
 from database import get_session
+from services.forecast_refresh_service import ForecastRefreshService
 
-from .exceptions import LocationNotFoundError, LocationAlreadyExistsError
+from .exceptions import LocationAlreadyExistsError, LocationNotFoundError
 from .models import LocationModel
 from .repository import LocationRepository
 from .schemas import CreateLocationSchema, UpdateLocationSchema
@@ -13,9 +14,11 @@ class LocationController:
     def __init__(
         self,
         session: Session = Depends(get_session),
+        forecast_refresh_service: ForecastRefreshService = Depends(),
     ):
         # Instantiate the location repo with dependency injection of db session
         self.location_repo = LocationRepository(session)
+        self.forecast_refresh_service = forecast_refresh_service
 
     def list_locations(self) -> list[LocationModel]:
         entities = self.location_repo.get_all()
@@ -47,11 +50,17 @@ class LocationController:
         return LocationModel.from_entity(updated_entity)
 
     def create_location(self, create_schema: CreateLocationSchema) -> LocationModel:
+        # Check if slug is not taken
         if self.location_repo.get_one(create_schema.slug):
             raise LocationAlreadyExistsError()
+
         new_location = self.location_repo.create(
             slug=create_schema.slug,
             lat=create_schema.latitude,
             lon=create_schema.longitude,
         )
+
+        # Update forecast for newly created location
+        self.forecast_refresh_service.refresh_daily_forecast(new_location)
+
         return LocationModel.from_entity(new_location)
