@@ -32,6 +32,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
   postgres_data:
