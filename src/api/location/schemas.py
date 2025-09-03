@@ -50,5 +50,5 @@ class CreateLocationSchema(BaseModel):
 
 
 class UpdateLocationSchema(BaseModel):
-    latitude: Optional[float]
-    longitude: Optional[float]
+    latitude: Optional[float] = Field(default=None)
+    longitude: Optional[float] = Field(default=None)
