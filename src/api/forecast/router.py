@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 
 from .controller import ForecastController
 from .schemas import ForecastSchema
@@ -37,9 +37,11 @@ def get_forecast(
 @router.post(
     "/refresh_all",
     summary="Refreshes daily forecast for all stored locations",
-    response_model=None,
+    response_model=dict,
 )
 def refresh_forecasts(
+    background_tasks: BackgroundTasks,
     controller: ForecastController = Depends(),
-) -> None:
-    controller.refresh_daily_forecasts()
+) -> dict:
+    background_tasks.add_task(controller.refresh_daily_forecasts)
+    return {"message": "Forecasts refresh started in background"}
