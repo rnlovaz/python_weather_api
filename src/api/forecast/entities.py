@@ -6,7 +6,7 @@ from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
 # Import types for relationship attributes
 # (TYPE_CHECKING is to prevent circular imports)
 if TYPE_CHECKING:
-    from src.api.location.entities import LocationEntity
+    from api.location.entities import LocationEntity
 
 
 class ForecastEntity(SQLModel, table=True):  # type: ignore
