@@ -32,3 +32,14 @@ def get_forecast(
         to_date=parsed_end_date,
     )
     return [ForecastSchema.from_model(model) for model in models]
+
+
+@router.post(
+    "/refresh_all",
+    summary="Refreshes daily forecast for all stored locations",
+    response_model=None,
+)
+def refresh_forecasts(
+    controller: ForecastController = Depends(),
+) -> None:
+    controller.refresh_daily_forecasts()
