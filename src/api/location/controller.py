@@ -1,7 +1,7 @@
 from fastapi import Depends
 from sqlmodel import Session
 
-from src.database import get_session
+from database import get_session
 
 from .exceptions import LocationNotFoundError
 from .models import LocationModel

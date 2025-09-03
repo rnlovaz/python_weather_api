@@ -4,7 +4,7 @@ from typing import Any
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
-from src.api.location.entities import LocationEntity
+from api.location.entities import LocationEntity
 
 from .entities import ForecastEntity
 

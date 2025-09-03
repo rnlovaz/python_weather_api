@@ -1,10 +1,10 @@
 import time
 from datetime import date, datetime
 
-from src.api.forecast.repository import ForecastRepository
-from src.api.forecast.schemas import UpdateForecastSchema
-from src.api.location.entities import LocationEntity
-from src.api.location.repository import LocationRepository
+from api.forecast.repository import ForecastRepository
+from api.forecast.schemas import UpdateForecastSchema
+from api.location.entities import LocationEntity
+from api.location.repository import LocationRepository
 
 from .seven_timer_client import SevenTimerClient, SevenTimerResponseDTO
 
