@@ -4,6 +4,7 @@
 This project is a simple **weather API** that integrates with the [7Timer API](http://www.7timer.info/) to fetch forecast data.
 
 - Built with [FastAPI](https://fastapi.tiangolo.com/)
+- Makes use of [PostgreSQL](https://www.postgresql.org/) as relational database
 - Uses [SQLModel](https://sqlmodel.tiangolo.com/) as ORM
 - Handles database migrations with [Alembic](https://alembic.sqlalchemy.org/)
 
@@ -15,23 +16,43 @@ Users can:
 
 A background **cron service** keeps forecasts up to date.
 
+## Pre-requirements ⚙️
+
+Software you'll need to run this project:
+
+- Python v3.11
+- Docker + Docker Compose (if you want to run it on containers)
+- PostgreSQL (if you're not using containers)
+
 ## Setup 🚀
 
-You can run this project through Docker (recommended) or locally.
+You can run this project through Docker (recommended) or locally. Assuming you have a terminal pointing to the project root folder:
 
 1. Copy `.env.example` → `.env` and adjust parameters.
 2. Install dependencies and setup git hooks:
+
     ```bash
     make setup
     ````
-3. Start containers:
-   ```bash
-   make up
-   ````
-4. Apply migrations:
+
+3. Apply migrations:
+
    ```bash
    make migrate
    ```
+
+4. Start containers OR start FastAPI server:
+
+   ```bash
+   make up
+   ````
+
+   or
+
+   ```bash
+   python src/run.py
+   ````
+
 5. Open the API docs at http://localhost:8000/docs (adjust the port if you've changed it)
 
 Note: makefile has other useful commands (generate migrations, run mypy, etc.). Feel free to explore them.
@@ -50,10 +71,10 @@ Here's the global structure of the project (some files were omitted):
 └── src/
     ├── database.py         # Database session setup
     ├── main.py             # FastAPI app entrypoint
-    ├── run.py              # App runner (uvicorn config)
+    ├── run.py              # App runner (uvicorn entrypoint)
     ├── ...
     ├── api/
     │   ├── location/       # Location resources (routes, controller, repo, schemas, models, entities, exceptions)
     │   └── forecast/       # Forecast resources (...)
-    └── services/           # Forecast refresh service, schedulers and 7timer client
+    └── services/           # Forecast refresh service, schedulers, 7timer client, logs
 ```
