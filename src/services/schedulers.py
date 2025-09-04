@@ -2,9 +2,12 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from sqlmodel import Session
 
 from database import engine
+from services.logger import get_logger
 
 from .forecast_refresh_service import ForecastRefreshService
 from .seven_timer_client import SevenTimerClient
+
+logger = get_logger(__name__)
 
 
 def start_scheduler() -> None:
@@ -12,7 +15,7 @@ def start_scheduler() -> None:
 
     # Add a new cron job that runs at 01:00 everyday
     scheduler.add_job(func=refresh_forecasts, trigger="cron", hour=1, minute=0)
-    print("Starting forecasts update scheduler...")
+    logger.debug("Starting forecasts update scheduler...")
     scheduler.start()
 
 

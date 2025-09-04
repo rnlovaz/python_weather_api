@@ -1,6 +1,10 @@
 import requests
 from pydantic import BaseModel
 
+from services.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class SevenTimerWindDTO(BaseModel):
     direction: str
@@ -27,6 +31,7 @@ class SevenTimerResponseDTO(BaseModel):
 
 class SevenTimerClient:
     BASE_URL = "https://www.7timer.info/bin/astro.php"
+    logger = get_logger(__name__)
 
     def get_forecast(self, lat: float, lon: float) -> SevenTimerResponseDTO:
         """
@@ -48,4 +53,8 @@ class SevenTimerClient:
             params=payload,
         )
         response_json = response.json()
-        return SevenTimerResponseDTO(**response_json)
+
+        parsed_response = SevenTimerResponseDTO(**response_json)
+        logger.debug("get_forecast - parsed_response: %s", parsed_response)
+
+        return parsed_response

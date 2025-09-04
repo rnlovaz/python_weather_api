@@ -9,8 +9,11 @@ from api.forecast.repository import ForecastRepository
 from api.location.entities import LocationEntity
 from api.location.repository import LocationRepository
 from database import get_session
+from services.logger import get_logger
 
 from .seven_timer_client import SevenTimerClient, SevenTimerResponseDTO
+
+logger = get_logger(__name__)
 
 
 class ForecastRefreshService:
@@ -48,23 +51,20 @@ class ForecastRefreshService:
         min_max_per_day_dict = {
             key: (min(value), max(value)) for key, value in daily_temps.items()
         }
+        logger.debug(
+            "_parse_daily_forecast - min_max_per_day_dict: %s", min_max_per_day_dict
+        )
 
         return min_max_per_day_dict
-
-    def _get_min_max_temp(
-        self, forecast_data: SevenTimerResponseDTO
-    ) -> tuple[int, int]:
-        """
-        Extract min and max temperatures for a 7timer API response. Returned tuple consists on (min, max).
-        """
-        daily_temps = [data.temp2m for data in forecast_data.dataseries]
-        return min(daily_temps), max(daily_temps)
 
     def refresh_location_forecast(self, location: LocationEntity) -> None:
         # fetch forecast data from 7timer client
         # Parse response to get max and min temp for available days
         # Update or create forecast entries for the current location
         # If forecast already exists, update it (max and min temp values), otherwise create it
+        logger.debug(
+            "refresh_location_forecast - Retrieving forecast for Location %s:", location
+        )
         forecast_data = self.seven_timer_client.get_forecast(
             lat=location.latitude, lon=location.longitude
         )
@@ -75,6 +75,14 @@ class ForecastRefreshService:
 
         # Loop forecast data and upsert DB data
         for forecast_date, (forecast_min, forecast_max) in parsed_daily_temps.items():
+            logger.debug(
+                "Upserting forecast: Date: %s - Min temp: %s Max temp: %s Location ID: %s (%s)",
+                forecast_date,
+                forecast_min,
+                forecast_max,
+                location.location_id,
+                location.slug,
+            )
             self.forecast_repo.upsert(
                 location_id=location.location_id,
                 forecast_date=forecast_date,
