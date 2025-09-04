@@ -61,6 +61,6 @@ class LocationController:
         )
 
         # Update forecast for newly created location
-        self.forecast_refresh_service.refresh_daily_forecast(new_location)
+        self.forecast_refresh_service.refresh_location_forecast(new_location)
 
         return LocationModel.from_entity(new_location)

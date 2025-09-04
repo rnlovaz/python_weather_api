@@ -48,6 +48,35 @@ class ForecastRepository:
         self.session.refresh(new_forecast)
         return new_forecast
 
+    def upsert(
+        self, location_id: int, forecast_date: datetime, min_temp: int, max_temp: int
+    ) -> ForecastEntity:
+        # Search for an existing forecast for the target date
+        target_forecast = self.session.exec(
+            select(ForecastEntity).where(
+                ForecastEntity.location_id == location_id,
+                ForecastEntity.forecast_date == forecast_date,
+            )
+        ).one_or_none()
+
+        # If a forecast entry already exists, update it
+        if target_forecast:
+            target_forecast.min_forecasted = min_temp
+            target_forecast.max_forecasted = max_temp
+        # Otherwise, create a new forecast entry
+        else:
+            target_forecast = ForecastEntity(
+                location_id=location_id,
+                forecast_date=forecast_date,
+                min_forecasted=min_temp,
+                max_forecasted=max_temp,
+            )
+            self.session.add(target_forecast)
+
+        self.session.commit()
+        self.session.refresh(target_forecast)
+        return target_forecast
+
     def update(
         self, forecast_id: int, update_data: dict[str, Any]
     ) -> ForecastEntity | None:
