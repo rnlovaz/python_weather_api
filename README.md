@@ -3,11 +3,6 @@
 
 This project is a simple **weather API** that integrates with the [7Timer API](http://www.7timer.info/) to fetch forecast data.
 
-- Built with [FastAPI](https://fastapi.tiangolo.com/)
-- Makes use of [PostgreSQL](https://www.postgresql.org/) as relational database
-- Uses [SQLModel](https://sqlmodel.tiangolo.com/) as ORM
-- Handles database migrations with [Alembic](https://alembic.sqlalchemy.org/)
-
 Users can:
 
 - Perform **CRUD operations** on locations
@@ -15,6 +10,13 @@ Users can:
 - Manually trigger a **forecast refresh** on all stored locations
 
 A background **cron service** keeps forecasts up to date.
+
+## Tech-stack 🛠️
+
+- [FastAPI](https://fastapi.tiangolo.com/) as web framework
+- [PostgreSQL](https://www.postgresql.org/) as relational database
+- [SQLModel](https://sqlmodel.tiangolo.com/) as ORM (built on top of [SQLAlchemy](https://www.sqlalchemy.org/))
+- [Alembic](https://alembic.sqlalchemy.org/) as database migrations tool
 
 ## Pre-requirements ⚙️
 
@@ -59,7 +61,7 @@ Note: makefile has other useful commands (generate migrations, run mypy, etc.). 
 
 ## Project Structure 📂
 
-Here's the global structure of the project (some files were omitted):
+Here's a simplified overview of the project structure:
 
 ```bash
 .
