@@ -1,11 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 
+from services.logger import get_logger
+
 from .controller import LocationController
 from .exceptions import LocationAlreadyExistsError, LocationNotFoundError
 from .schemas import CreateLocationSchema, LocationSchema, UpdateLocationSchema
 
 # Initialize a new router
 router = APIRouter()
+
+logger = get_logger(__name__)
 
 
 @router.get(
@@ -17,7 +21,9 @@ def get_locations(
     controller: LocationController = Depends(),
 ) -> list[LocationSchema]:
     models = controller.list_locations()
-    return [LocationSchema.from_model(model) for model in models]
+    schemas = [LocationSchema.from_model(model) for model in models]
+    logger.debug("get_locations - schemas: %s", schemas)
+    return schemas
 
 
 @router.get(
@@ -31,7 +37,9 @@ def get_location(
 ) -> LocationSchema:
     try:
         model = controller.get_location(slug)
-        return LocationSchema.from_model(model)
+        schema = LocationSchema.from_model(model)
+        logger.debug("get_location - schema: %s", schema)
+        return schema
     except LocationNotFoundError:
         raise HTTPException(status_code=404, detail="Location not found")
 
@@ -49,7 +57,9 @@ def create_location(
 ) -> LocationSchema:
     try:
         model = controller.create_location(create_schema=payload)
-        return LocationSchema.from_model(model)
+        schema = LocationSchema.from_model(model)
+        logger.debug("create_location - schema: %s", schema)
+        return schema
     except LocationAlreadyExistsError:
         raise HTTPException(
             status_code=409,
@@ -70,7 +80,9 @@ def update_location(
 ) -> LocationSchema:
     try:
         model = controller.update_location(slug=slug, update_schema=payload)
-        return LocationSchema.from_model(model)
+        schema = LocationSchema.from_model(model)
+        logger.debug("update_location - schema: %s", schema)
+        return schema
     except LocationNotFoundError:
         raise HTTPException(status_code=404, detail="Location not found")
 

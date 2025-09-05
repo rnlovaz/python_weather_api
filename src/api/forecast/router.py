@@ -2,10 +2,14 @@ from datetime import date, datetime
 
 from fastapi import APIRouter, BackgroundTasks, Depends
 
+from services.logger import get_logger
+
 from .controller import ForecastController
 from .schemas import ForecastSchema
 
 router = APIRouter()
+
+logger = get_logger(__name__)
 
 
 @router.get(
@@ -31,7 +35,11 @@ def get_forecast(
         from_date=parsed_start_date,
         to_date=parsed_end_date,
     )
-    return [ForecastSchema.from_model(model) for model in models]
+
+    schemas = [ForecastSchema.from_model(model) for model in models]
+    logger.debug("get_forecast - schemas: %s", schemas)
+
+    return schemas
 
 
 @router.post(

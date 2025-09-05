@@ -5,9 +5,12 @@ from sqlmodel import Session
 
 from database import get_session
 from services.forecast_refresh_service import ForecastRefreshService
+from services.logger import get_logger
 
 from .models import ForecastModel
 from .repository import ForecastRepository
+
+logger = get_logger(__name__)
 
 
 class ForecastController:
@@ -25,7 +28,11 @@ class ForecastController:
         entities = self.forecast_repo.get_forecast_by_slug_and_period(
             slug=slug, from_date=from_date, to_date=to_date
         )
+        logger.debug("get_forecast_by_slug_and_period - entities: %s", entities)
+
         models = [ForecastModel.from_entity(entity) for entity in entities]
+        logger.debug("get_forecast_by_slug_and_period - models: %s", models)
+
         return models
 
     def refresh_daily_forecasts(self) -> None:

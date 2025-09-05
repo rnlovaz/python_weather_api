@@ -91,10 +91,17 @@ class ForecastRefreshService:
             )
 
     def refresh_all_locations_forecast(self) -> None:
-        # fetch all stored locations
-        # for each location, refresh forecast
+        # Fetch all stored locations
         stored_locations = self.location_repo.get_all()
+        logger.debug(
+            "refresh_all_locations_forecast - stored_locations: %s", stored_locations
+        )
 
+        # For each location, refresh forecast
         for location in stored_locations:
+            logger.debug(
+                "refresh_all_locations_forecast - Refreshing forecast for location: %s",
+                location,
+            )
             self.refresh_location_forecast(location)
-            time.sleep(2)  # to prevent sven timer API overload
+            time.sleep(2)  # to prevent seven timer API overload
